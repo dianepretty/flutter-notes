@@ -1,8 +1,53 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SignUp extends StatelessWidget {
+class SignUp extends StatefulWidget {
   const SignUp({super.key});
+
+  @override
+  State<SignUp> createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+   void _submit (){
+     final String firstName = _firstNameController.text.trim();
+     final String lastName = _lastNameController.text.trim();
+     final String email = _emailController.text.trim();
+     final String password = _passwordController.text;
+
+     if (firstName.isEmpty || lastName.isEmpty || email.isEmpty || password.isEmpty) {
+       _showSnackBar('Please fill in all fields.');
+       return;
+     }
+     if (!email.contains('@') || !email.contains('.')) {
+       _showSnackBar('Please enter a valid email address.');
+       return;
+     }
+     if (password.length < 6) {
+       _showSnackBar('Password must be at least 6 characters long.');
+       return;
+     }
+   }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message, style: TextStyle(fontSize: 18),)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +69,7 @@ class SignUp extends StatelessWidget {
         width: 400,
         height: 50,
         child: TextField(
+          controller: _firstNameController,
             decoration: InputDecoration(
               labelText: "First Name",
               hintText: "John",
@@ -31,7 +77,7 @@ class SignUp extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
 
                 ),
-             
+
             ),
             keyboardType: TextInputType.text,
           )),
@@ -40,6 +86,7 @@ class SignUp extends StatelessWidget {
         width: 400,
         height: 50,
           child: TextField(
+            controller: _lastNameController,
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
                 labelText: "Last Name",
@@ -56,6 +103,7 @@ class SignUp extends StatelessWidget {
               width: 400,
               height: 50,
               child: TextField(
+                controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                     labelText: "Email",
@@ -71,6 +119,7 @@ class SignUp extends StatelessWidget {
               width: 400,
               height: 50,
               child: TextField(
+                controller: _passwordController,
                 obscureText: true,
                 enableSuggestions: false,
                 autocorrect: false,
@@ -87,7 +136,7 @@ class SignUp extends StatelessWidget {
          SizedBox(
            width: 400,
            height: 50,
-           child: ElevatedButton(onPressed: (){},
+           child: ElevatedButton(onPressed: _submit,
              style: ElevatedButton.styleFrom(
                  backgroundColor: Color(0xFF395BFE),
                  foregroundColor: Colors.white,
@@ -99,7 +148,7 @@ class SignUp extends StatelessWidget {
 
            ),
          ),
-          
+
           // SnackBar(content: Text("You have successfully signed up"))
 
 
