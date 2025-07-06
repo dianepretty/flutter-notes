@@ -15,6 +15,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isPasswordVisible = false; // New state variable
 
   @override
   void dispose() {
@@ -99,7 +100,7 @@ class _LoginState extends State<Login> {
                   width: 400,
                   height: 50,
                   child: TextField(
-                    obscureText: true,
+                    obscureText: !_isPasswordVisible, // Changed this line
                     enableSuggestions: false,
                     autocorrect: false,
                     controller: _passwordController,
@@ -109,6 +110,18 @@ class _LoginState extends State<Login> {
                       alignLabelWithHint: true,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
+                      ),
+                      // Added this section for the eye icon
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                          color: Theme.of(context).primaryColorDark,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
                       ),
                     ),
                   ),

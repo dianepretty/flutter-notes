@@ -41,8 +41,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.password,
       );
       emit(AuthAuthenticated(user: user));
+      print('AuthBloc: Successfully signed up and emitted AuthAuthenticated for user: ${user.email}'); // ADDED PRINT
     } catch (e) {
       emit(AuthError(message: e.toString()));
+      print('AuthBloc Error during SignUp: ${e.toString()}'); // ADDED PRINT
     }
   }
 
@@ -55,8 +57,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.password,
       );
       emit(AuthAuthenticated(user: user));
+      print('AuthBloc: Successfully signed in and emitted AuthAuthenticated for user: ${user.email}'); // ADDED PRINT
     } catch (e) {
       emit(AuthError(message: e.toString()));
+      print('AuthBloc Error during SignIn: ${e.toString()}'); // ADDED PRINT
     }
   }
 
@@ -66,8 +70,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       await _authService.signOut();
       emit(const AuthUnauthenticated());
+      print('AuthBloc: Successfully signed out and emitted AuthUnauthenticated.'); // ADDED PRINT
     } catch (e) {
       emit(AuthError(message: e.toString()));
+      print('AuthBloc Error during SignOut: ${e.toString()}'); // ADDED PRINT
     }
   }
 
@@ -78,14 +84,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         UserModel? user = await _authService.getCurrentUserData();
         if (user != null) {
           emit(AuthAuthenticated(user: user));
+          print('AuthBloc: AuthStatusChanged detected authenticated user: ${user.email}'); // ADDED PRINT
         } else {
           emit(const AuthUnauthenticated());
+          print('AuthBloc: AuthStatusChanged detected unauthenticated state (user null).'); // ADDED PRINT
         }
       } catch (e) {
         emit(AuthError(message: e.toString()));
+        print('AuthBloc Error during AuthStatusChanged: ${e.toString()}'); // ADDED PRINT
       }
     } else {
       emit(const AuthUnauthenticated());
+      print('AuthBloc: AuthStatusChanged detected unauthenticated state.'); // ADDED PRINT
     }
   }
 
