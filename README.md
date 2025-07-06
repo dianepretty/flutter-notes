@@ -11,6 +11,9 @@ This is a simple yet robust note-taking application built with Flutter, Firebase
 - Delete Confirmation: A confirmation dialog before deleting notes to prevent accidental data loss.
 - Input Validation: Client-side validation for login and sign-up forms
 
+## Architecture Diagram
+![Architecture diagram.png](../../Downloads/Architecture%20diagram.png)
+
 ## Getting Started
 
 ### Prerequisites
