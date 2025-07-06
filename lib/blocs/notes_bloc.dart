@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/note_model.dart';
 import '../services/notes_service.dart';
 import 'notes_event.dart';
 import 'notes_state.dart';

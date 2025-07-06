@@ -60,7 +60,7 @@ class AuthWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        print('AuthWrapper: Current AuthState is $state');
+        // print('AuthWrapper: Current AuthState is $state');
         if (state is AuthLoading) {
           return const Scaffold(
             body: Center(
@@ -68,7 +68,7 @@ class AuthWrapper extends StatelessWidget {
             ),
           );
         } else if (state is AuthAuthenticated) {
-          print('AuthWrapper: Navigating to NotesScreen.');
+          // print('AuthWrapper: Navigating to NotesScreen.');
           // Provide NotesBloc here, only when authenticated
           return BlocProvider<NotesBloc>(
             create: (context) => NotesBloc(
@@ -77,7 +77,7 @@ class AuthWrapper extends StatelessWidget {
             child: const Notes(),
           );
         } else {
-          print('AuthWrapper: Showing Login screen.');
+          // print('AuthWrapper: Showing Login screen.');
           return const Login();
         }
       },
