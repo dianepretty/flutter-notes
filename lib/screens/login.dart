@@ -15,7 +15,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _isPasswordVisible = false; // New state variable
+  bool _isPasswordVisible = false;
 
   @override
   void dispose() {
@@ -48,7 +48,17 @@ class _LoginState extends State<Login> {
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message, style: const TextStyle(fontSize: 18)),
+        content: Text(message, style: const TextStyle(fontSize: 16)),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 4),
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Dismiss',
+          textColor: Colors.white,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
       ),
     );
   }
@@ -57,17 +67,30 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: BlocListener<AuthBloc, AuthState>(
-          listener: (context, state) {
-            if (state is AuthError) {
-              _showSnackBar(state.message);
-            }
-          },
-          child: Padding(
+        child: MultiBlocListener(
+          listeners: [
+            BlocListener<AuthBloc, AuthState>(
+              listenWhen: (previous, current) {
+                // Only listen to specific state changes
+                return current is AuthError || current is AuthAuthenticated;
+              },
+              listener: (context, state) {
+                if (state is AuthError) {
+                  _showSnackBar(state.message);
+                } else if (state is AuthAuthenticated) {
+                  // Handle successful authentication - navigate to home screen
+                  print('User successfully logged in: ${state.user.email}');
+                  // Add your navigation logic here
+                }
+              },
+            ),
+          ],
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(height: 100), // Add some top spacing
                 Center(
                   child: Text(
                     "Login",
@@ -79,6 +102,8 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 const SizedBox(height: 24),
+
+                // Email field
                 SizedBox(
                   width: 400,
                   height: 50,
@@ -96,11 +121,13 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 const SizedBox(height: 24),
+
+                // Password field
                 SizedBox(
                   width: 400,
                   height: 50,
                   child: TextField(
-                    obscureText: !_isPasswordVisible, // Changed this line
+                    obscureText: !_isPasswordVisible,
                     enableSuggestions: false,
                     autocorrect: false,
                     controller: _passwordController,
@@ -111,7 +138,6 @@ class _LoginState extends State<Login> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      // Added this section for the eye icon
                       suffixIcon: IconButton(
                         icon: Icon(
                           _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
@@ -127,6 +153,8 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 const SizedBox(height: 24),
+
+                // Login button
                 BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
                     return SizedBox(
