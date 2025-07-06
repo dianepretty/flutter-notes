@@ -46,11 +46,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.password,
       );
       emit(AuthAuthenticated(user: user));
-      print('AuthBloc: Successfully signed up and emitted AuthAuthenticated for user: ${user.email}');
+      // print('AuthBloc: Successfully signed up and emitted AuthAuthenticated for user: ${user.email}');
     } catch (e) {
       String errorMessage = _getErrorMessage(e);
       emit(AuthError(message: errorMessage));
-      print('AuthBloc Error during SignUp: ${e.toString()}');
+      // print('AuthBloc Error during SignUp: ${e.toString()}');
     } finally {
       _isHandlingSignIn = false;
     }
@@ -66,11 +66,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.password,
       );
       emit(AuthAuthenticated(user: user));
-      print('AuthBloc: Successfully signed in and emitted AuthAuthenticated for user: ${user.email}');
     } catch (e) {
       String errorMessage = _getErrorMessage(e);
       emit(AuthError(message: errorMessage));
-      print('AuthBloc Error during SignIn: ${e.toString()}');
     } finally {
       _isHandlingSignIn = false;
     }
@@ -83,11 +81,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       await _authService.signOut();
       emit(const AuthUnauthenticated());
-      print('AuthBloc: Successfully signed out and emitted AuthUnauthenticated.');
     } catch (e) {
       String errorMessage = _getErrorMessage(e);
       emit(AuthError(message: errorMessage));
-      print('AuthBloc Error during SignOut: ${e.toString()}');
     } finally {
       _isHandlingSignIn = false;
     }
@@ -95,7 +91,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   // Handle auth status changes
   void _onAuthStatusChanged(AuthStatusChanged event, Emitter<AuthState> emit) async {
-    // Don't handle auth status changes while processing sign in/out
     if (_isHandlingSignIn) return;
 
     if (event.isAuthenticated) {
@@ -103,19 +98,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         UserModel? user = await _authService.getCurrentUserData();
         if (user != null) {
           emit(AuthAuthenticated(user: user));
-          print('AuthBloc: AuthStatusChanged detected authenticated user: ${user.email}');
         } else {
           emit(const AuthUnauthenticated());
-          print('AuthBloc: AuthStatusChanged detected unauthenticated state (user null).');
         }
       } catch (e) {
         String errorMessage = _getErrorMessage(e);
         emit(AuthError(message: errorMessage));
-        print('AuthBloc Error during AuthStatusChanged: ${e.toString()}');
       }
     } else {
       emit(const AuthUnauthenticated());
-      print('AuthBloc: AuthStatusChanged detected unauthenticated state.');
     }
   }
 

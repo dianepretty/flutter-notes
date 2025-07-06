@@ -72,9 +72,9 @@ class AuthWrapper extends StatelessWidget {
           // Provide NotesBloc here, only when authenticated
           return BlocProvider<NotesBloc>(
             create: (context) => NotesBloc(
-              notesService: context.read<NotesService>(), // Get the NotesService instance from the tree
-            )..add(const LoadNotes()), // Immediately load notes when BLoC is created
-            child: const Notes(), // This should match your file name, which is 'notes.dart' and class 'Notes'
+              notesService: context.read<NotesService>(),
+            )..add(const LoadNotes()),
+            child: const Notes(),
           );
         } else {
           print('AuthWrapper: Showing Login screen.');
